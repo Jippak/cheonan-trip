@@ -455,7 +455,7 @@ function drawRoutes(){
   const box = document.getElementById("routes");
   const list = ROUTES.filter(r=>active==="all"||r.id===active);
   box.innerHTML = list.map(r=>{
-    const total = r.legs.reduce((a,l)=>a+l.min,0), km = r.legs.reduce((a,l)=>a+l.km,0);
+    const total = r.legs.reduce((a,l)=>a+l.min,0), km = Math.floor(r.legs.reduce((a,l)=>a+l.km,0) * 10 + 1e-6) / 10;
     const stops = r.stops.map((k,i)=>{
       const s = SPOTS[k];
       const stop = `<li class="stop${s.cat === "목욕" ? " bath" : ""}"><span class="num">${i+1}</span>${thumb(k)}<div class="body">
