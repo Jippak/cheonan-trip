@@ -463,17 +463,19 @@ function drawRoutes(){
         <div class="meta"><span class="badge">${s.cat}</span>${s.tip?`<span class="badge plain">${s.tip}</span>`:""}
         <a class="maplink" href="${kakao(s.name)}" target="_blank" rel="noopener">카카오맵 ↗</a></div></div></li>`;
       const l = r.legs[i];
-      const leg = l ? `<li class="leg" aria-label="다음 장소까지 차로 약 ${l.min}분"><span class="rail"></span><span class="t">차로 약 <b class="tn">${l.min}분</b> · <span class="tn">${l.km}km</span>${l.bus ? ` <span class="bus">버스 약 <b class="tn">${l.bus.min}분</b>${l.bus.line ? ` · ${l.bus.line}번` : ""}${l.bus.stop ? ` · ${l.bus.stop}에서 승차` : ""}</span>` : ""}</span></li>` : "";
+      const leg = l ? `<li class="leg" aria-label="다음 장소까지 차로 약 ${l.min}분"><span class="rail"></span><span class="t">차로 약 <b class="tn">${l.min}분</b> · <span class="tn">${l.km}km</span>${l.bus ? ` <span class="bus">버스 약 <b class="tn">${l.bus.min}분</b>${l.bus.line ? ` · ${busNo(l.bus.line)}` : ""}${l.bus.stop ? ` · ${l.bus.stop}에서 승차` : ""}</span>` : ""}</span></li>` : "";
       return stop + leg;
     }).join("");
     const hb = r.home.bus, st = r.end.find(e => e.to === "station");
-    const endRow = `<li class="endrow"><span class="sq"></span><div class="home"><b class="ht">목욕 후 청룡식당 본점까지</b><div class="hrow"><span class="hk">택시</span><span>약 <b class="tn">${r.home.taxi.min}분</b> · ${r.home.taxi.km}km · 요금 약 <b class="tn">${r.home.taxi.fare}원</b></span></div>${hb ? `<div class="hrow"><span class="hk">버스</span><span>약 <b class="tn">${hb.min}분</b> (걷기 ${hb.walk}분 포함${hb.tr ? ", 환승 " + hb.tr : ""})${hb.line ? ` · ${hb.line}번` : ""}${hb.stop ? ` · ${hb.stop}에서 승차` : " · 정류장이 가까워 대부분 걸어요"}</span></div>` : ""}<div class="hnote">천안역까지는 차로 약 ${st.min}분이에요.</div></div></li>`;
+    const endRow = `<li class="endrow"><span class="sq"></span><div class="home"><b class="ht">목욕 후 청룡식당 본점까지</b><div class="hrow"><span class="hk">택시</span><span>약 <b class="tn">${r.home.taxi.min}분</b> · ${r.home.taxi.km}km · 요금 약 <b class="tn">${r.home.taxi.fare}원</b></span></div>${hb ? `<div class="hrow"><span class="hk">버스</span><span>약 <b class="tn">${hb.min}분</b> (걷기 ${hb.walk}분 포함${hb.tr ? ", 환승 " + hb.tr : ""})${hb.line ? ` · ${busNo(hb.line)}` : ""}${hb.stop ? ` · ${hb.stop}에서 승차` : " · 정류장이 가까워 대부분 걸어요"}</span></div>` : ""}<div class="hnote">천안역까지는 차로 약 ${st.min}분이에요.</div></div></li>`;
     return `<article class="route" style="--c:var(${r.c})">
       <div class="route-head"><div><span class="tag">${r.tag}</span><h3>${r.title}</h3><p>${r.desc}</p></div>
       <div class="sum"><span>이동 합계 <b class="tn">${total}분</b></span><span class="tn">${km}km</span></div></div>
       <ol class="stops">${stops}${endRow}</ol>${foodHtml(r)}</article>`;
   }).join("");
 }
+
+const busNo = s => s.endsWith(" 등") ? s.slice(0, -2) + "번 등" : s + "번";
 
 function foodHtml(r){
   const f = FOOD[r.id]; if (!f) return "";
